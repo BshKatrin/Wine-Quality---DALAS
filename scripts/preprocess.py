@@ -102,5 +102,22 @@ def calc_rating(data):
     data[["mean_rating", "n_rating"]] = data["ratings_distribution"].apply(distr_to_mean)
 
 
+def calc_std(row, stars):
+    if row is None or row == [] or np.isnan(row).all():
+        return pd.Series([np.nan, np.nan, np.nan])
+
+    row = np.asarray(row)
+    if np.all(row == 0):
+        return pd.Series([np.nan, np.nan, np.nan])
+
+    cum_counts = np.cumsum(row)
+    total = row.sum()
+
+    median = stars[np.searchsorted(cum_counts, total / 2)]
+    mean = np.average(stars, weights=row)
+    std = np.sqrt(np.average((stars - mean)**2, weights=row))
+    return pd.Series([median, mean, std])
+
+
 def clean_year(data):
     data["year"] = pd.to_numeric(data["year"].replace("N.V.", pd.NA)).astype('Int64')

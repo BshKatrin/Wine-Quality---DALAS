@@ -33,10 +33,12 @@ def infer_alcohol(wines, assign_inferred_col: bool):
     alcohol.loc[mask, "alcohol"] = inferred[mask]
 
     # Assign inferred / observed flag
+    cols = ["id", "alcohol"]
     if assign_inferred_col:
         alcohol["inferred"] = np.where(mask, "Inferred", "Observed")
+        cols.append("inferred")
 
-    return wines.drop(columns=["alcohol"]).merge(alcohol[["id", "alcohol"]], on="id", how="left")
+    return wines.drop(columns=["alcohol"]).merge(alcohol[cols], on="id", how="left")
 
 
 def impute_row(row, group, list_col, num_cols):

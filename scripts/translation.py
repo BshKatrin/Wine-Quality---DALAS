@@ -199,6 +199,7 @@ mapping = {
         "tinta barroca": "tinta",
         "tinta francisca": "tinta",
         "tinta cao": "tinta",
+        "tinto cao": "tinta",
         "trincadeira": "tinta",
         "touriga nacional": "touriga",
         "touriga franca": "touriga",
@@ -226,22 +227,10 @@ mapping = {
         "vernaccia di oristano": "vernaccia",
     },
 
-    # "grapes_hybrid": {
-    #     # catawba, concord : Vitis labrusca & Vitis vinifera (these grapes are not present in a db)
-    #     # muscadelle : Gouais blanc & ??? (many wines in db already)
-    #     "johanniter": ["riesling", "solaris"],
-    #     "acolon": ["dornfelder", "lemberger"],
-    #     "regent": ["silvaner", "muller-thurgau", "chambourcin"],
-    #     "caberlot": ["cabernet sauvignon", "merlot"],
-
-    #     # "siegerrebe": ["gewurztraminer"]
-    #     # "vidal": "trebbiano",  # & rayon d'or, not present
-    # }
     "grapes_families": {
-        # INTERNATIONAL REDS
+        # international reds (well-known)
         "cabernet sauvignon": "cabernet_sauvignon_family",
         "petit verdot": "cabernet_sauvignon_family",
-        "caberlot": "cabernet_sauvignon_family",
         "cabernet mitos": "cabernet_sauvignon_family",
 
         "cabernet franc": "cabernet_franc_family",
@@ -267,7 +256,7 @@ mapping = {
 
         "gamay": "gamay_family",
 
-        # MEDITERRANEAN REDS
+        # mediterranean reds
         "grenache": "grenache_family",
         "red grenache": "grenache_family",
         "grenache blanc": "grenache_family",
@@ -291,21 +280,17 @@ mapping = {
         "sagrantino": "sagrantino_tannat_family",
         "tannat": "sagrantino_tannat_family",
 
-        # CENTRAL / NORTHERN EUROPE REDS
+        # central / northern europe reds
         "blaufrankisch": "blaufrankisch_family",
         "lemberger": "blaufrankisch_family",
 
         "zweigelt": "zweigelt_family",
         "st. laurent": "zweigelt_family",
 
-        "dornfelder": "dark_hybrids_family",
-        "dunkelfelder": "dark_hybrids_family",
-        "samtrot": "dark_hybrids_family",
-
         "schiava": "schiava_family",
         "lambrusco": "lambrusco_family",
 
-        # REGIONAL REDS
+        # regional reds
         "barbera": "italian_reds",
         "dolcetto": "italian_reds",
         "ciliegiolo": "italian_reds",
@@ -337,7 +322,7 @@ mapping = {
         "nerello cappuccio": "volcanic_island_reds",
         "listan negro": "volcanic_island_reds",
 
-        # WHITES
+        # whites (well-known)
         "riesling": "riesling_family",
         "welschriesling": "riesling_family",
 
@@ -355,7 +340,6 @@ mapping = {
         "viognier": "viognier_family",
         "petit manseng": "petit_manseng_family",
 
-        # STRUCTURAL / NEUTRAL WHITES
         "chardonnay": "chardonnay_family",
         "aligote": "chardonnay_family",
 
@@ -379,7 +363,7 @@ mapping = {
         "turbiana": "garganega_family",
         "grecanico": "garganega_family",
 
-        # REGIONAL / MERGED WHITES
+        # regional whites
         "jacquere": "alpine_whites",
         "arbane": "alpine_whites",
         "petite arvine": "alpine_whites",
@@ -397,7 +381,7 @@ mapping = {
         "savatiano": "greek_whites",
         "malagouzia": "greek_whites",
 
-        # ARMENIAN / CAUCASUS SPECIAL
+        # armenian / caucasus
         "rkatsiteli": "caucasus_whites",
         "kisi": "caucasus_whites",
         "mtsvane": "caucasus_whites",
@@ -415,7 +399,7 @@ mapping = {
         "milagh": "caucasus_whites",
         "kangun": "caucasus_whites",
 
-        # IBERIAN / PORTUGUESE
+        # portuguese
         "touriga": "portuguese_reds",
         "tinta": "portuguese_reds",
         "tinto cao": "portuguese_reds",
@@ -435,7 +419,7 @@ mapping = {
         "verdelho": "portuguese_whites",
         "verdello": "portuguese_whites",
 
-        # SPANISH WHITES
+        # spanish whites
         "macabeo": "spanish_whites",
         "palomino": "spanish_whites",
         "xarel-lo": "spanish_whites",
@@ -452,7 +436,7 @@ mapping = {
         "perera": "spanish_whites",
         "merseguera": "spanish_whites",
 
-        # ITALIAN WHITES (NEUTRAL / STRUCTURAL)
+        # italin whites
         "cortese": "italian_whites",
         "ansonica": "italian_whites",
         "albana": "italian_whites",
@@ -490,7 +474,7 @@ mapping = {
         "pederna": "italian_whites",
         "verdiso": "italian_whites",
 
-        # ITALIAN REDS (REGIONAL)
+        # italian reds
         "pignolo": "italian_reds",
         "vespolina": "italian_reds",
         "raboso piave": "italian_reds",
@@ -508,7 +492,7 @@ mapping = {
         "rondinella": "italian_reds",
         "corvina": "italian_reds",
 
-        # FRENCH SOUTH
+        # french south
         "bourboulenc": "southern_french_whites",
         "picpoul blanc": "southern_french_whites",
         "clairette": "southern_french_whites",
@@ -524,7 +508,7 @@ mapping = {
         "grolleau": "southern_french_reds",
         "negrette": "southern_french_reds",
 
-        # GERMAN / AUSTRIAN WHITES
+        # german / austria
         "gruner veltliner": "austrian_german_whites",
         "silvaner": "austrian_german_whites",
         "scheurebe": "austrian_german_whites",
@@ -534,30 +518,36 @@ mapping = {
         "bacchus": "austrian_german_whites",
         "siegerrebe": "austrian_german_whites",
 
-        # HYBRIDS
-        "cabernet dorsa": "hybrid_reds",
-        "acolon": "hybrid_reds",
+        # vinifera & vinifera
+        "dornfelder": "dark_vinifera_cross",
+        "dunkelfelder": "dark_vinifera_cross",
+        "samtrot": "dark_vinifera_cross",
+        "cabernet dorsa": "dark_vinifera_cross",
+        "acolon": "dark_vinifera_cross",
+        "domina": "dark_vinifera_cross",
+        "pinotage": "dark_vinifera_cross",
+        "caberlot": "dark_vinifera_cross",
+
+        # hybrid reds
         "regent": "hybrid_reds",
-        "domina": "hybrid_reds",
-        "pinotage": "hybrid_reds",
         "concord": "hybrid_reds",
         "catawba": "hybrid_reds",
         "norton": "hybrid_reds",
         "dechaunac": "hybrid_reds",
-        "caberlot": "hybrid_reds",
+        "chambourcin": "hybrid_reds",
 
-        "chambourcin": "hybrid_whites",
+        # hybrid whites
         "vidal": "hybrid_whites",
         "vignoles": "hybrid_whites",
         "cabernet blanc": "hybrid_whites",
         "solaris": "hybrid_whites",
         "johanniter": "hybrid_whites",
 
-        # EASTERN EUROPE / BALKANS
+        # eastern europe / balkans
         "harslevelu": "eastern_europe_whites",
         "furmint": "eastern_europe_whites",
 
-        # ATLANTIC / ISLAND WHITES
+        # atlantic / island whites
         "hondarrabi zuri": "atlantic_whites",
         "marmajuelo": "atlantic_whites",
         "terrantes do pico": "atlantic_whites",
