@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "status": "historical_saved_results_not_retrained",
+  "provenance": {
+    "report": "reports/DALAS_wine_project.pdf",
+    "report_sha256": "47ed8e2dcfe8bf4bf4b1318038a9b8c05fc61cf57331899b3911b8a91026e78c",
+    "notebook": "notebooks/04_models_and_explanations.ipynb",
+    "report_tables": {
+      "public_rating": 3,
+      "price_relative": 4
+    }
+  },
+  "split": {
+    "train_rows": 37315,
+    "test_rows": 9329,
+    "test_fraction": 0.2,
+    "stratify": "country",
+    "random_state": 42,
+    "validation_folds": 5,
+    "row_count_source_cell_id": "512ba3f3"
+  },
+  "model_parameters": {
+    "iterations": 500,
+    "learning_rate": 0.05,
+    "depth": 6,
+    "loss_function": "RMSE",
+    "random_state": 0
+  },
+  "tasks": {
+    "public_rating": {
+      "model": "CatBoostRegressor",
+      "target": "mean_rating",
+      "price_in_model_inputs": true,
+      "source_cell_id": "655fd0fc",
+      "source_output_sha256": "812ce9a6cf5664b6234f8c58c54fc134b5bb7c7e1d718d7a3ac6aa25ca60f9f0",
+      "train": {
+        "mae": 0.15711806241348183,
+        "mse": 0.05582919212310632,
+        "r2": 0.5881440402091715
+      },
+      "test": {
+        "mae": 0.16263520606399368,
+        "mse": 0.05928215351171821,
+        "r2": 0.5525750817887636
+      }
+    },
+    "price_relative": {
+      "model": "CatBoostRegressor",
+      "target": "mean_rating minus training price-bin mean",
+      "price_in_model_inputs": false,
+      "source_cell_id": "169523e9",
+      "source_output_sha256": "80e95954a83ba3674beff87a20084696c03b196c464d33335c2d2e4699eb0cff",
+      "train": {
+        "mae": 0.15791508186942926,
+        "mse": 0.05627116309009524,
+        "r2": 0.2730801690447543,
+        "precision": 0.7444927086565312,
+        "recall": 0.7193464574797641,
+        "f1": 0.7317035982923359,
+        "accuracy": 0.7170574835856894
+      },
+      "test": {
+        "mae": 0.1676414753976021,
+        "mse": 0.061185187326224764,
+        "r2": 0.18494564425445803,
+        "precision": 0.7007693907257226,
+        "recall": 0.6689162366018261,
+        "f1": 0.6844724281507057,
+        "accuracy": 0.6669525136670597
+      },
+      "decision_rule": "class 1 when predicted adjusted rating >= 0; otherwise class 0"
+    }
+  }
+}

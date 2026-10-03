@@ -49,10 +49,11 @@ def impute_row(row, group, list_col, num_cols):
             return 0.0
         return 1 - len(a & b) / len(a | b)
 
-    if pd.isna(row[list_col]) or (len(row[list_col]) == 0) or (~row[num_cols].isna()).all():
+    if (not isinstance(row[list_col], (list, tuple, set))
+            or len(row[list_col]) == 0 or (~row[num_cols].isna()).all()):
         return row
 
-    group = group[~group[list_col].isna()]
+    group = group[group[list_col].map(lambda value: isinstance(value, (list, tuple, set)))].copy()
     if group.empty:
         return row
 
@@ -65,10 +66,10 @@ def impute_row(row, group, list_col, num_cols):
             if group_col.empty:
                 continue
 
-            distances = group_col["distances"]
-            distances[distances.index == row.name] = np.inf
+            distances = group_col["distances"].copy()
+            distances.loc[distances.index == row.name] = np.inf
             min_dist = distances.min()
-            if min_dist == 1:
+            if min_dist >= 1:
                 continue
 
             nearest = group_col[distances == min_dist]
@@ -79,7 +80,7 @@ def impute_row(row, group, list_col, num_cols):
 
 def impute_taste(df):
     return (df.
-            groupby(["type"], group_keys=False).
+            groupby(["type"], group_keys=False)[df.columns].
             apply(lambda group: group.apply(lambda row: impute_row(row, group, "grapes_merged", taste_columns), axis=1))
             )
 
@@ -91,9 +92,11 @@ def impute_wines_df(wines, parent_wines, grapes):
 
     # 2. Grapes
     # merge parent, children grapes
+    def grape_set(value):
+        return set(value) if isinstance(value, (list, tuple, set)) else set()
+
     wines["grapes_merged"] = wines[["grapes", "parent_grapes"]].apply(
-        lambda row: list(set(row["grapes"]) | set(row["parent_grapes"]))
-        if isinstance(row["grapes"], list) else row, axis=1)
+        lambda row: sorted(grape_set(row["grapes"]) | grape_set(row["parent_grapes"])), axis=1)
     wines_grapes = wines[["id", "grapes_merged"]].explode("grapes_merged")
 
     # Normalizing grapes names (unidecode, lowercase)
@@ -110,7 +113,7 @@ def impute_wines_df(wines, parent_wines, grapes):
     wines.loc[wines["type"] != "spark", "fizziness"] = wines[wines["type"] != "spark"]["fizziness"].fillna(0)
     wines.loc[~wines["type"].isin(["orange", "red"]), "tannin"] = wines[~wines["type"].isin([
         "orange", "red"])]["tannin"].fillna(0)
-    wines.loc[wines["type"] == "spark", "sweetness"] = wines[wines["type"] == "spark"]["fizziness"].fillna(0)
+    wines.loc[wines["type"] == "spark", "sweetness"] = wines[wines["type"] == "spark"]["sweetness"].fillna(0)
 
     # impute others based on jaccard distance
     wines_grapes = wines_grapes.dropna(subset=["grapes_merged"]).groupby("id")["grapes_merged"].apply(set).reset_index()

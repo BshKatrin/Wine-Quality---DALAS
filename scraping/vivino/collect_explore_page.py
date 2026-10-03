@@ -5,7 +5,8 @@ import aiohttp
 import random
 import math
 import os
-import sys
+import argparse
+from pathlib import Path
 
 # avilable params
 
@@ -21,12 +22,12 @@ price_range_min, region_ids, wine_style_ids, wine_type_ids, winery_ids,
 vintage_ids, wine_years, excluding_vintage_id, wsa_year, top_list_filter
 """
 
-if len(sys.argv) < 4 :
-    print("Need 3 arguments: country code, country made, and currency and stats (us)")
-    exit(-1)
-
-p1, p2, p3 = sys.argv[1], sys.argv[2], sys.argv[3]
-# p4 = sys.argv[4] # states
+parser = argparse.ArgumentParser(description="Collect Vivino explore pages.")
+parser.add_argument("shipping_country", help="Two-letter browsing/shipping country code")
+parser.add_argument("origin_country", help="Two-letter wine production country code")
+parser.add_argument("currency", help="Currency code, e.g. eur or usd")
+args = parser.parse_args()
+p1, p2, p3 = args.shipping_country, args.origin_country, args.currency
 
 url = "https://www.vivino.com/api/explore/explore"
 
@@ -71,7 +72,8 @@ RETRY_LIMIT = 3            # Retries per failed request
 PER_REQUEST_DELAY = (0.5, 3)  # Random delay range per request
 BATCH_DELAY = 7                 # Delay between batches
 
-OUTPUT_DIR = f"{p2}_{p3}_jsons"        # Folder to store individual page files, country_made_curr_state
+DATA_DIR = Path(__file__).resolve().parents[2] / "data/raw/vivino"
+OUTPUT_DIR = DATA_DIR / f"{p2}_{p3}_jsons"        # Folder to store individual page files, country_made_curr_state
 
 async def fetch_page(session, page):
     """Fetch a single page of wines, with retry and random delay."""

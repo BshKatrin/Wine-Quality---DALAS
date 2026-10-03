@@ -1,18 +1,14 @@
 import scrapy
 from scrapy_playwright.page import PageMethod
 from ..items import ReviewItem
+from ..url_input import URLListSpider
 import json
 
 
-class SwReviewsSpider(scrapy.Spider):
+class SwReviewsSpider(URLListSpider):
     name = "sw_reviews"
     # allowed_domains = ["simplewine.ru"]
     # start_urls = ["https://simplewine.ru/"]
-    urls = []
-    with open("../urls_to_scrap.json") as f:
-        urls = json.load(f)
-    print(urls[:5])
-
     async def start(self):
         for url in self.urls:
             yield scrapy.Request(url + "reviews", callback=self.parse_item, cb_kwargs={"url": url},

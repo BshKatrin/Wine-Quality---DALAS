@@ -6,14 +6,13 @@ import random
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-# COLLECT LIST OF VINTAGE GIVEN WINERY
-
 # ---------------- CONFIG ----------------
-INPUT_FILE = "TREAT_winerys_ids.txt"  # list of IDs, one per line
-OUTPUT_DIR = Path("new_winery_info")               # where to save results
-OUTPUT_DIR.mkdir(exist_ok=True)
+DATA_DIR = Path(__file__).resolve().parents[2] / "data/raw/vivino"
+INPUT_FILE = DATA_DIR / "TREAT_wines_ids.txt"  # list of IDs, one per line
+OUTPUT_DIR = DATA_DIR / "new_wines_checkout_s3"               # where to save results
 
-NUM_WORKERS = 3      # number of concurrent threads
+
+NUM_WORKERS = 4      # number of concurrent threads
 BASE_DELAY = (1, 4)  # random delay range in seconds between requests
 # ----------------------------------------
 
@@ -32,12 +31,13 @@ BASE_PARAMS = {
 
 def fetch_wine(wine_id: int):
     """Fetch and save data for one wine ID."""
-    output_path = OUTPUT_DIR / f"winery_{wine_id}_infos.json"
+    output_path = OUTPUT_DIR / f"wine_{wine_id}_prices.json"
     if output_path.exists():
         print(f"Already have {wine_id}")
         return
-    
-    url = f"https://www.vivino.com/api/wines/{wine_id}/checkout_prices"
+
+    # url = f"https://www.vivino.com/api/vintages/{wine_id}"
+    url = f"https://www.vivino.com/api/checkout_prices?vintage_id={wine_id}"
     time.sleep(random.uniform(*BASE_DELAY))  # random pause between requests
 
     try:
@@ -56,6 +56,7 @@ def fetch_wine(wine_id: int):
 
 
 def main():
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     # Read all wine IDs from file
     if not os.path.exists(INPUT_FILE):
         print(f"Input file '{INPUT_FILE}' not found!")
@@ -64,7 +65,6 @@ def main():
     with open(INPUT_FILE, "r", encoding="utf-8") as f:
         content = f.read()
         wine_ids = content.split()  
-        print(wine_ids[0])
 
     with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
         futures = [executor.submit(fetch_wine, int(wid)) for wid in wine_ids]

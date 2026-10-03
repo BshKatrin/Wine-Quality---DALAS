@@ -1,22 +1,18 @@
 import scrapy
 from scrapy_playwright.page import PageMethod
 from ..items import WineItem, handlers
+from ..url_input import SIMPLEWINE_DATA, URLListSpider
 
 import json
 
 
-class SimplewineSpider(scrapy.Spider):
+class SimplewineSpider(URLListSpider):
     name = "simple_wine"
     n_items_per_page = 33
     n_items = 17
     # start_urls = [f"https://simplewine.ru/catalog/vino/filter/country-sloveniya/?page_number={num}"
     #               for num in range(1, ceil(n_items / n_items_per_page) + 1)]
     # start_urls = ["https://simplewine.ru/catalog/vino/filter/country-gruziya/?page-number=1"]
-
-    urls = []
-    with open("../urls_to_scrap.json") as f:
-        urls = json.load(f)
-    print(urls[:5])
 
     async def start(self):
         for i, url in enumerate(self.urls, start=1):
@@ -37,7 +33,8 @@ class SimplewineSpider(scrapy.Spider):
         data = json.loads(script)
         urls = self.get_urls(data)
 
-        with open(f"slovenia_urls_page_{page_num}.json", "w", encoding="utf-8") as f:
+        SIMPLEWINE_DATA.mkdir(parents=True, exist_ok=True)
+        with open(SIMPLEWINE_DATA / f"slovenia_urls_page_{page_num}.json", "w", encoding="utf-8") as f:
             json.dump(urls, f, ensure_ascii=False, indent=4)
 
         for wine_url in urls:

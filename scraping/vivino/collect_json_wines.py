@@ -5,7 +5,8 @@ import aiohttp
 import random
 import math
 import os
-import sys
+import argparse
+from pathlib import Path
 
 # avilable params
 
@@ -20,12 +21,14 @@ price_range_min, region_ids, wine_style_ids, wine_type_ids, winery_ids,
 vintage_ids, wine_years, excluding_vintage_id, wsa_year, top_list_filter
 """
 
-if len(sys.argv) < 5 :
-    print("Need 4 arguments: country code, country made, and currency, wine type (id)")
-    exit(-1)
-
-p1, p2, p3, p4 = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
-p5 = sys.argv[5] # states
+parser = argparse.ArgumentParser(description="Collect Vivino pages by wine type and region.")
+parser.add_argument("shipping_country")
+parser.add_argument("origin_country")
+parser.add_argument("currency")
+parser.add_argument("wine_type", type=int, choices=[1, 2, 3, 4, 7, 24])
+parser.add_argument("region", type=int, help="Vivino region ID")
+args = parser.parse_args()
+p1, p2, p3, p4, p5 = args.shipping_country, args.origin_country, args.currency, args.wine_type, args.region
 
 url = "https://www.vivino.com/api/explore/explore"
 
@@ -70,7 +73,8 @@ RETRY_LIMIT = 3            # Retries per failed request
 PER_REQUEST_DELAY = (0.5, 3)  # Random delay range per request
 BATCH_DELAY = 7                 # Delay between batches
 
-OUTPUT_DIR = f"{typew[int(p4)]}_{p2}_{p3}_jsons"        # Folder to store individual page files
+DATA_DIR = Path(__file__).resolve().parents[2] / "data/raw/vivino"
+OUTPUT_DIR = DATA_DIR / f"{typew[int(p4)]}_{p2}_{p3}_jsons"        # Folder to store individual page files
 
 async def fetch_page(session, page):
     """Fetch a single page of wines, with retry and random delay."""
@@ -137,7 +141,7 @@ async def main():
         for start in range(1, total_pages + 1, CONCURRENCY_LIMIT):
             batch_pages = [
                 page for page in range(start, min(start + CONCURRENCY_LIMIT, total_pages + 1))
-                if not os.path.exists(os.path.join(OUTPUT_DIR, f"page_{page}.json"))
+                if not os.path.exists(os.path.join(OUTPUT_DIR, f"page_s{p5}_{page}.json"))
             ]
             if not batch_pages:
                 continue  # skip if all in this batch already exist

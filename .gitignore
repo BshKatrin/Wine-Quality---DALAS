@@ -1,5 +1,12 @@
 # Custom files
-data/
+/data/**
+!/data/**/
+!/data/**/README.md
+!/data/**/.gitkeep
+/artifacts/figures/
+/artifacts/models/**
+!/artifacts/models/.gitkeep
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
