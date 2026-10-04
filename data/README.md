@@ -1,6 +1,6 @@
 # Data layout
 
-The historical datasets are absent from this checkout. Do not substitute synthetic data or a different wine-quality dataset and present its results as this project’s results. Notebook outputs remain available for reading without the source files.
+Source datasets are excluded from Git. A prepared predecessor, `processed/wines_inferred.csv`, has been recovered locally for the [website retraining run](../docs/web-data.md); the later historical modeling CSV and other notebook inputs remain absent from this checkout. Do not substitute synthetic data or a different wine-quality dataset and present its results as this project’s results. Notebook outputs remain available for reading without the source files.
 
 | Location | Expected contents |
 | --- | --- |

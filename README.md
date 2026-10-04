@@ -17,7 +17,7 @@ CatBoost performed best among the tested Random Forest, XGBoost, and CatBoost co
 | Predict mean public rating | MAE **0.163 stars**, MSE **0.0593**, R² **0.553** | Predicts the observed rating on a 1–5 scale, with price included |
 | Predict above-average rating within a price range | F1 **0.684**, accuracy **66.7%** | Predicts the sign of a price-adjusted rating, with price excluded from the model inputs |
 
-These are **historical results**, verified against the report and saved notebook outputs, not newly trained models. The repository includes code, recorded notebook outputs, and the report. The original datasets and fitted models are not included, and some preparation steps must be recovered before a complete rerun. See [reproducibility](docs/reproducibility.md).
+These are **historical results**, verified against the report and saved notebook outputs, not newly trained models. The repository includes code, recorded notebook outputs, and the report. The original datasets and fitted models are not included in Git. A prepared table has since been recovered locally for a separate website model; some preparation steps remain missing for an exact historical reproduction. See [reproducibility](docs/reproducibility.md).
 
 ![Comparison of price-relative classification performance over five validation folds](reports/figures/model_comparison_classification.png)
 
@@ -35,6 +35,7 @@ data/processed/             Analysis and modeling inputs, kept locally
 reports/                    Course report and selected historical figures
 artifacts/                  New generated figures and future model exports
 docs/                       Results, reproduction guide, and website assessment
+web/                        Static explorer of 9,329 held-out test wines
 scripts/check_project.py    Offline structural and results-provenance checks
 tests/                      Focused checks for corrected execution issues
 ```
@@ -79,6 +80,16 @@ On macOS, XGBoost also requires the OpenMP runtime: `brew install libomp`.
 
 The numbering is a reading order, not a claim that executing all four notebooks builds the missing datasets. To check whether the expected input files are available, run `python scripts/check_project.py --require-data`. Scraping is a separate, explicit activity; neither verification nor notebook setup makes network requests to the wine websites.
 
-## Website direction
+## Wine explorer
 
-An interactive research showcase could make the project much easier to explore: data collection and missingness, a model comparison, the role of price, and explanations for selected wines. A live predictor would additionally require recovered data, exported preprocessing and models, and further validation. See the [website assessment](docs/website.md) for scope and tradeoffs.
+Browse wines, compare actual and predicted ratings, and inspect individual SHAP explanations in the new [local website](web/README.md):
+
+```bash
+cd web
+npm ci
+npm run dev -- --host 127.0.0.1
+```
+
+Requires Node.js 22.12+. The website uses **all 9,329 held-out wines** from a newly retrained CatBoost rating model, with precomputed predictions and all SHAP contributions. The new run achieves MAE **0.162445 stars** and R² **0.553889**; these are separate from the historical report results above. Training and inference happen offline, and explanations load on demand from static files.
+
+The [CatBoost export guide](docs/web-data.md) documents the recovered prepared data, reconstruction choices, and reproducible release workflow. The [website README](web/README.md) covers Vercel configuration. The [mobile performance review](docs/web-performance.md) records verification and loading measurements. The [website assessment](docs/website.md) explains the scope and limitations.

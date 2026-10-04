@@ -1,54 +1,29 @@
-# Is a website worth building?
+# Website direction: browse the model's test wines
 
-**Yes, as a focused interactive research showcase.** The project has an interesting question, a real collection effort, thoughtful handling of missingness, a model comparison, and useful explanations. A website would make that work accessible to someone who will not read a 30-page report or run notebooks.
+The chosen direction is a **wine catalogue with individual model explanations**. The report tells the research story. The website adds something the PDF cannot: choose a wine, compare its actual and predicted rating, and inspect the factors behind that prediction.
 
-A general wine recommendation service would require considerably more work. The historical model predicts public ratings, the price-relative task reaches about 67% accuracy, and several model inputs are difficult for a visitor to supply. Data and fitted artifacts also need recovery before any real inference.
+## Production data
 
-## Options
+The [React/Vite frontend](../web/README.md) uses the complete **9,329-wine held-out set** from a newly retrained CatBoost raw-rating regressor. The recovered prepared table contains 50,141 rows; the historical eligibility filters leave 46,644. A country-stratified 80/20 split with seed 42 yields 37,315 training rows and 9,329 test rows. Every held-out prediction has all 103 native CatBoost SHAP contributions.
 
-| Direction | Visitor experience | Prerequisites | Assessment |
-| --- | --- | --- | --- |
-| Interactive project story | Explore the question, collection, missingness, models, price effects, and report | Existing report, historical charts, results JSON | Best first release; useful for a portfolio |
-| Selected-wine explanation explorer | Pick an example and see its observed rating, prediction, and contributing features | Recover data/model; export verified examples with SHAP and metadata | Strong next step; no inference server needed |
-| Live rating / price-relative predictor | Enter wine characteristics and receive a fresh prediction | Reproducible preprocessing and model, validation, input design, deployment checks | A later experiment; more maintenance and uncertain consumer value |
-| Personalized recommendations | Find bottles matched to a visitor’s taste and available budget | Preference/interaction data and current catalog/availability | Outside what the existing experiments establish |
+The new model achieves test **MAE 0.162445 stars, RMSE 0.243121, and R² 0.553889**. These are new-run results, separate from the historical scores preserved in the report and results summary.
 
-## Recommended first release: “Decoding the Bottle”
+The recovered table lacks the later `food_filt` column, so this run uses its existing food labels. Some inputs were imputed before the recovered table was saved; the scope of that historical fitting cannot be verified. Newly fitted multi-label vocabularies use only training rows. This row split does not evaluate generalization to entirely unseen wineries or wine families. See [data preparation and provenance](web-data.md) for the exact choices.
 
-Build a small interactive site around the project’s actual findings:
+## Browser experience
 
-1. **The question:** does a higher price correspond to a higher public rating? Explain the observed association and the limits on causal conclusions.
-2. **From websites to data:** show the two sources, parent/vintage structure, missingness, and imputation decisions.
-3. **What worked best:** compare the tested models, explain MAE in stars, and show held-out results for both tasks.
-4. **What shaped predictions:** explore price, vintage, geography, and taste using verified historical figures. Pair each chart with a short interpretation and a limitation.
-5. **Above average for the price:** explain the adjusted-rating target, including why it is different from predicted stars or a personalized recommendation.
-6. **Methodology and credits:** link the full report, code, authors, sources, and reproduction status.
+The explorer supports searchable, filterable browsing; saved wines; grid/list layouts; actual and predicted ratings; signed prediction errors; SHAP waterfalls and exact tables; theme-level influence; feature-context plots; and an interactive actual-versus-predicted scatter plot. Wine URLs can be shared and reopened. The interface retains the approved beige, black, and burgundy palette, with an optional dark theme.
 
-Existing results support a story with chart switching, annotations, and metric explanations. Dataset filters and individual-wine explanations should be added only after their underlying records have been recovered and exported. Do not invent interactive observations from chart screenshots or generate plausible-looking predictions from summary metrics.
+The full catalogue supports searching and filtering all test wines. Production builds render the first 12 real wines into static HTML and hydrate the interface in the browser; the full catalogue downloads in the background before enabling full search and filtering. Individual explanations load on demand in small batches, and feature-context data loads only when requested. Chart samples are explicitly labeled; the catalogue and aggregate metrics cover the entire test set. Versioned assets support long-lived caching, while the release manifest is revalidated. Production builds validate the prepared release and reject missing or inconsistent data.
 
-## Hosting and implementation
+## Hosting
 
-A static React/Vite site with chart components and small checked JSON exports would be sufficient for the first version. Keep the frontend in a future `web/` directory and give Vercel that directory as its project root. Vercel supports deployment of Vite projects; see the [official Vite deployment guide](https://vite.dev/guide/static-deploy#vercel).
+Vercel serves a static frontend and prepared JSON assets. **No model runs on the server**: training, inference, and SHAP calculation happen offline. A fresh deployment builds using the prepared release under `web/public/release`, without Python, the source CSV, the fitted model, or the external drive. See [the website README](../web/README.md) for deployment settings and release regeneration.
 
-Training, imputation fitting, and SHAP computation can happen offline. The browser can display published summaries and selected example explanations without running Python. This is a proposed architecture; no website has been scaffolded or deployed in this reorganization.
+The local demonstration collection remains available for development and tests; production uses the genuine held-out release. See the [mobile performance review](web-performance.md) for verification and deployment details.
 
-Vercel also supports Python functions, so live inference is possible in principle. Its [Python runtime guide](https://vercel.com/docs/functions/runtimes/python) and [function limits](https://vercel.com/docs/functions/limitations) would need review against the actual exported model, package sizes, and latency. Keep only inference dependencies in a deployment. Whether a function or a separate inference service is appropriate should be measured after the model is recovered.
+## Is it worth it?
 
-## What an example explorer needs
+Yes, for demonstrating model interpretation and software work. Browsing a familiar product catalogue makes prediction errors and feature contributions concrete, adding portfolio value beyond reproducing report pages and charts.
 
-Export a small set of real held-out examples containing:
-
-- A stable example ID, provenance, public-safe display information, and the observed input features.
-- Observed mean rating and predicted stars for the rating model.
-- Observed and predicted adjusted rating for the price-relative model, with its zero-threshold class label.
-- SHAP base value and feature contributions for the correct model, plus aggregation rules for food/grape indicators.
-- Training-derived bin metadata and a clear statement that the adjusted model is not a calibrated probability.
-- Model/data version and the evaluation method used to produce the example.
-
-Confirm that SHAP contributions sum to the prediction in the relevant output units. Label observed, imputed, and unavailable inputs. Use historical prices as historical prices; do not imply that an old catalog is current shopping advice.
-
-## Decision
-
-The worthwhile scope is a polished project story, optionally followed by a handful of verified wine explanations. It gives the course work a public identity and makes both the results and your reasoning visible.
-
-A live predictor becomes worth considering if your goal is to practice model deployment and product development, and you can recover the data. It is harder to justify as a useful consumer service with the evidence currently available. Start with the showcase and treat live predictions as a separately validated extension.
+This is a research explorer. Public ratings describe perception and may reflect popularity, price, selection bias, and other confounders. SHAP explains what the fitted model used; it does not identify causal effects. Live inference and personalized recommendations remain outside the current scope.

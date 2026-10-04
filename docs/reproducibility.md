@@ -4,7 +4,7 @@
 
 This repository is a documented research archive with an installable helper package. It includes the course report, four notebooks with saved outputs, collection code, and preprocessing/imputation helpers. It is not yet a complete pipeline that reproduces the reported results from raw collections.
 
-The original data, trained models, fitted encoders, and exact original dependency versions are absent. The new `uv.lock` describes the environment used for the structural checks and focused tests, not the environment that produced the course results.
+The original trained models, fitted encoders, and exact original dependency versions are absent. A prepared predecessor table, `wines_inferred.csv`, was recovered locally from the archived project. It produces the recorded 46,644 eligible rows; the final `wines_inferred_food_grapes.csv` remains missing. The [website export guide](web-data.md) documents a separate retraining run and its reconstruction choices. Source data and fitted models stay outside Git. The new `uv.lock` describes the current environment, not the environment that produced the course results.
 
 The report was copied without modification from the original checkout into `reports/`. Selected notebook figures were extracted without altering their contents. Metric values in `reports/results.json` are taken from saved outputs and checked against them by the verification script.
 
