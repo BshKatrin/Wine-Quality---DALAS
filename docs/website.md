@@ -1,5 +1,7 @@
 # Website direction: browse the model's test wines
 
+The live site is [Decoding the Bottle](https://decodingthebottle.ekat.world/), a project for the **Data Science, Learning and Applications (DALAS)** course.
+
 The chosen direction is a **wine catalogue with individual model explanations**. The report tells the research story. The website adds something the PDF cannot: choose a wine, compare its actual and predicted rating, and inspect the factors behind that prediction.
 
 ## Production data

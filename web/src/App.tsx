@@ -447,23 +447,23 @@ function App({
           <div>
             <div className="intro-eyebrow">
               <span className="tiny-rule" />
-              Wine, through the model’s eyes
+              Wine ratings & machine learning
             </div>
             <h1>
               {section === "collection" ? (
                 <>
-                  Good wine. <span>Interesting predictions.</span>
+                  What’s in a <span>wine rating?</span>
                 </>
               ) : (
                 <>
-                  The collection, <span>in perspective.</span>
+                  Where did the model <span>miss the mark?</span>
                 </>
               )}
             </h1>
             <p>
               {section === "collection"
-                ? "Find a bottle. Compare its ratings. Uncover what shaped the prediction."
-                : "Explore prediction errors across the wines currently loaded in your browser."}
+                ? "Pick a bottle and see where the model agrees with the people who rated it."
+                : "See which ratings the model got close to, and which ones surprised it."}
             </p>
           </div>
           <button className="how-link" onClick={() => setModal("help")}>
@@ -901,8 +901,8 @@ function App({
         )}
         <footer className="site-footer">
           <span>
-            Decoding the bottle <span className="footer-divider">/</span> DALAS
-            wine project
+            Decoding the bottle <span className="footer-divider">/</span> DALAS:
+            Data Science, Learning and Applications
           </span>
           <span>Ekaterina Bogush & Amélie Chu</span>
           <button className="text-button" onClick={() => setModal("help")}>
@@ -936,10 +936,16 @@ function App({
       <Modal
         open={modal === "help"}
         onClose={() => setModal(null)}
-        title="A little context goes a long way."
-        description="Three things to know when exploring a wine’s prediction."
+        title="How to read the ratings"
+        description="What the model predicts and how to read its explanations."
       >
         <div className="help-content">
+          <p>
+            We built Decoding the Bottle for the Data Science, Learning and
+            Applications (DALAS) course. The question: how much can a wine’s
+            price, origin, grapes, and taste profile tell us about its public
+            rating?
+          </p>
           <section>
             <span className="help-icon">
               <WineIcon size={23} />
@@ -1022,7 +1028,7 @@ function App({
         <Modal
           open={modal === "import"}
           onClose={() => setModal(null)}
-          title="Bring your test wines."
+          title="Try your own test wines"
           description="Load a collection with actual ratings, model predictions, and per-wine SHAP contributions."
         >
           <div className="import-area">

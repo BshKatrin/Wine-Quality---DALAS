@@ -2,11 +2,13 @@
 
 **What can a wine’s price, origin, grapes, and taste profile tell us about its public rating?**
 
-A DALAS data science course project by **Ekaterina Bogush** and **Amélie Chu**. We collected wine data from Vivino and SimpleWine, explored its biases, imputed missing values, compared tree-based models, and explained their predictions with SHAP.
+A project for the **Data Science, Learning and Applications (DALAS)** course by **Ekaterina Bogush** and **Amélie Chu**. We collected wine data from Vivino and SimpleWine, explored its biases, imputed missing values, compared tree-based models, and explained their predictions with SHAP.
 
 Our target is **public perception expressed in ratings**, rather than an objective measure of wine quality. We also studied whether a wine is rated above the average of wines in a similar price range.
 
 **Start with the [full report](reports/DALAS_wine_project.pdf), [results summary](docs/results.md), or [modeling notebook](notebooks/04_models_and_explanations.ipynb).**
+
+**[Explore the wines on Decoding the Bottle](https://decodingthebottle.ekat.world/)**: browse 9,329 held-out wines, compare public ratings with model predictions, and open each bottle’s SHAP explanation. The website uses a separately retrained model; see the [website guide](web/README.md) for details.
 
 ## Recorded results
 
@@ -79,17 +81,3 @@ On macOS, XGBoost also requires the OpenMP runtime: `brew install libomp`.
 5. [Models and explanations](notebooks/04_models_and_explanations.ipynb): compare models and inspect their explanations.
 
 The numbering is a reading order, not a claim that executing all four notebooks builds the missing datasets. To check whether the expected input files are available, run `python scripts/check_project.py --require-data`. Scraping is a separate, explicit activity; neither verification nor notebook setup makes network requests to the wine websites.
-
-## Wine explorer
-
-Browse wines, compare actual and predicted ratings, and inspect individual SHAP explanations in the new [local website](web/README.md):
-
-```bash
-cd web
-npm ci
-npm run dev -- --host 127.0.0.1
-```
-
-Requires Node.js 22.12+. The website uses **all 9,329 held-out wines** from a newly retrained CatBoost rating model, with precomputed predictions and all SHAP contributions. The new run achieves MAE **0.162445 stars** and R² **0.553889**; these are separate from the historical report results above. Training and inference happen offline, and explanations load on demand from static files.
-
-The [CatBoost export guide](docs/web-data.md) documents the recovered prepared data, reconstruction choices, and reproducible release workflow. The [website README](web/README.md) covers Vercel configuration. The [mobile performance review](docs/web-performance.md) records verification and loading measurements. The [website assessment](docs/website.md) explains the scope and limitations.

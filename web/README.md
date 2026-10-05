@@ -1,4 +1,8 @@
-# Decoding the Bottle: local wine explorer
+# Decoding the Bottle: wine explorer
+
+**Live website: [decodingthebottle.ekat.world](https://decodingthebottle.ekat.world/)**
+
+Built for the **Data Science, Learning and Applications (DALAS)** course by Ekaterina Bogush and Amélie Chu.
 
 A browsable catalogue of held-out wines, actual and predicted public ratings, and individual SHAP explanations. Built with React, TypeScript, Vite, Radix Dialog, Phosphor icons, and self-hosted Manrope. No inference server or account is required.
 
